@@ -1,5 +1,6 @@
 package Sistema_Escola;
 
+
 class Curso {
     private String codigoCurso;
     private String nomeCurso;
