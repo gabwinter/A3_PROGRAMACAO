@@ -5,32 +5,45 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import BD.Conexao;
 
 public class Professor extends Usuario_sem_definicao {
 	private int codigo;
 	private String materia;
+	private List<Curso> cursos;
 	
 	public Professor(String materia, String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
 		super(nomeCompleto, cpf, endereco, email, celular);
 		this.materia = materia;
 	}
 	
+	public Professor(String materia, String nomeCompleto, String cpf, String endereco, String email, String celular, List<Curso> cursos) throws Exception {
+		super(nomeCompleto, cpf, endereco, email, celular);
+		this.materia = materia;
+		this.cursos = cursos;
+	}
+	
 	public float getCodigo() {
 		return codigo;
+	}
+	
+	public String getMateria() {
+		return materia;
 	}
 	
 	private void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 	
-	public String materia() {
-		return materia; 
+	private void addCurso(Curso curso) {
+		this.cursos.add(curso);
 	}
 	
 	public void salvarNoBanco(){
 		String sql = "INSERT INTO professores (nome, cpf, endereco, email, celular) VALUES (?, ?, ?, ?, ?)";
+		String sql2 = "INSERT INTO professores (nome, cpf, endereco, email, celular) VALUES (?, ?, ?, ?, ?)";
 		Connection conexao = null;
 		PreparedStatement pstm = null;
 		
