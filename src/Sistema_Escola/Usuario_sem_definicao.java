@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Usuario_sem_definicao {
 	
-	    private int matricula;
 	    private String nomeCompleto;
 	    private String cpf;
 	    private String endereco;
@@ -30,9 +29,6 @@ public class Usuario_sem_definicao {
 
 	    // Getters
 
-	    public int getMatricula() {
-	        return matricula;
-	    }
 
 	    public String getNomeCompleto() {
 	        return nomeCompleto;
@@ -53,6 +49,8 @@ public class Usuario_sem_definicao {
 	    public String getCelular() {
 	        return celular;
 	    }
+	    
+	    // Setters
 	    
 	    private void validateNome(String nome) throws Exception {
 	    	if(nome.length() <= 2) {
