@@ -2,7 +2,7 @@ package Sistema_Escola;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usuario_sem_definicao {
+public class Pessoa {
 	
 	    private String nomeCompleto;
 	    private String cpf;
@@ -10,7 +10,7 @@ public class Usuario_sem_definicao {
 	    private String email;
 	    private String celular;
 
-	    public Usuario_sem_definicao(String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
+	    public Pessoa(String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
 	    	
 	    	
 	    	this.validateEmail(email);

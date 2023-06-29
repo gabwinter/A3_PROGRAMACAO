@@ -6,59 +6,61 @@ import java.util.Scanner;
 
 
 
-public class Principal {
+public class Program {
 	public static void main(String[] args) {		
-		run();		
+		execute();		
 	}
 	
-	private static void run() {
+	private static void execute() {
 		try {
-			Scanner leitor = new Scanner(System.in);
+			Scanner scanner = new Scanner(System.in);
 			
-			int resposta = exibeMenuPrincipal(leitor);
+			int response = displayMainMenu(scanner);
 			limpaTela();
 			
-			if(resposta == 1) {
-				Sala sala = exibeMenuCadastroSala(leitor);
+			if(response == 1) {
+				Sala sala = displayRoomRegistrationMenu(scanner);
 				sala.salvarNoBanco();	
 				limpaTela();
-				run();
+				execute();
 			}
-			if(resposta == 2) {
-				Curso curso = exibeMenuCadastroCurso(leitor);
+			if(response == 2) {
+				Curso curso = displayCourseRegistrationMenu(scanner);
 				curso.salvarNoBanco();
 				limpaTela();
-				run();
+				execute();
 			}
-			if(resposta == 3) {
-				Professor professor = exibeMenuCadastroProfessor(leitor);
+			if(response == 3) {
+				Professor professor = displayTeacherRegistrationMenu(scanner);
 				professor.salvarNoBanco();	
 				limpaTela();
-				run();
+				execute();
 			}
-			if(resposta == 4) {
-				Turma turma = exibeMenuCadastroTurma(leitor);
+			if(response == 4) {
+				Turma turma = displayClassRegistrationMenu(scanner);
 				turma.salvarNoBanco();	
 				limpaTela();
-				run();
+				execute();
 			}
-			if(resposta == 5) {
-				Aluno aluno = exibeMenuCadastroAluno(leitor);
+			if(response == 5) {
+				Aluno aluno = displayStudentRegistrationMenu(scanner);
 				aluno.salvarNoBanco();	
 				limpaTela();
-				run();
+				execute();
 			}
 			
 			
-			leitor.close();
+			scanner.close();
 		} catch(Exception error) {
 			System.out.print("\n\nOcorreu um erro: " + error.getMessage() + "\n\n");
-			run();
+			execute();
 		}	
 	}
 
 	
-	private static int exibeMenuPrincipal(Scanner leitor) {
+	private static int displayMainMenu(Scanner leitor) {
+		System.out.print("--- Menu Principal ---\n\n");
+		
 		System.out.println("1 - Cadastrar salas");
 		System.out.println("2 - Cadastrar cursos");
 		System.out.println("3 - Cadastrar professores");
@@ -67,20 +69,20 @@ public class Principal {
 		
 		
 		
-		System.out.println("\n");
-		System.out.print("Selecione: ");
+		System.out.print("\n");
+		System.out.print("Escolha uma opção (1,2,3,4,5): ");
 		int resposta = Integer.parseInt(leitor.nextLine());
 		
 		if(resposta < 1 || resposta > 5) {
 			limpaTela();
-			resposta = exibeMenuPrincipal(leitor);
+			resposta = displayMainMenu(leitor);
 		}
 		
 		return resposta;
 	}
 	
-	private static Sala exibeMenuCadastroSala(Scanner leitor) {
-		System.out.println("Cadastro de Salas\n");
+	private static Sala displayRoomRegistrationMenu(Scanner leitor) {
+		System.out.println("--- Cadastro de Salas ---\n");
 		
 		try {
 			System.out.print("nome: ");
@@ -92,19 +94,19 @@ public class Principal {
 			
 			Sala sala = new Sala(nome, local, capacidadeTotal);
 			
-			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
-			System.out.print("Sala cadastrada com sucesso!");
-			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			System.out.print("\n- - - - - - - - - - - - - - -\n");
+			System.out.print("Sala " + sala.getNome() + " cadastrada!");
+			System.out.print("\n- - - - - - - - - - - - - - -\n");
 			return sala;
 		}
 		catch(Exception error) {
 			System.out.println("Ocorreu um erro: " + error + "\n\n");
-			return exibeMenuCadastroSala(leitor);
+			return displayRoomRegistrationMenu(leitor);
 		}
 	}
 	
-	private static Curso exibeMenuCadastroCurso(Scanner leitor) {
-		System.out.println("Cadastro de Cursos\n");
+	private static Curso displayCourseRegistrationMenu(Scanner leitor) {
+		System.out.println("--- Cadastro de Cursos ---\n");
 		
 		try {
 			System.out.print("nome: ");
@@ -121,13 +123,12 @@ public class Principal {
 			return curso;
 		}
 		catch(Exception error) {
-			System.out.println("Ocorreu um erro: " + error + "\n\n");
-			return exibeMenuCadastroCurso(leitor);
+			throw error;
 		}
 	}
 	
-	private static Professor exibeMenuCadastroProfessor(Scanner leitor) throws Exception {
-		System.out.println("Cadastro de Professores\n");
+	private static Professor displayTeacherRegistrationMenu(Scanner leitor) throws Exception {
+		System.out.println("--- Cadastro de Professores ---\n");
 
 		try {
 			
@@ -182,8 +183,8 @@ public class Principal {
 		}
 	}
 	
-	private static Turma exibeMenuCadastroTurma(Scanner leitor) throws Exception {
-		System.out.println("Cadastro de Turmas\n");
+	private static Turma displayClassRegistrationMenu(Scanner leitor) throws Exception {
+		System.out.println("--- Cadastro de Turmas ---\n");
 		
 		try {
 			System.out.print("Dia da semana que a turma terá aula: \n\n");
@@ -266,7 +267,7 @@ public class Principal {
 	}
 	
 	
-	private static Aluno exibeMenuCadastroAluno(Scanner leitor) throws Exception {
+	private static Aluno displayStudentRegistrationMenu(Scanner leitor) throws Exception {
 		System.out.println("Cadastro de Alunos\n");
 
 		try {
@@ -328,6 +329,8 @@ public class Principal {
 		}
 	}
 	private static void limpaTela() {
-	    System.out.println("\n\n");
+		System.out.print("\n\n");
+		System.out.print("\033[H\033[2J");
+	    System.out.flush();
 	}
 }
