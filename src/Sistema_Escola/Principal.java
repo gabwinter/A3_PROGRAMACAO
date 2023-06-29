@@ -254,6 +254,9 @@ public class Principal {
 			}
 			
 			Turma turma = new Turma(professorDaTurma, salaDaTurma, diaDaSemana);
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			System.out.print("Turma cadastrada com sucesso!");
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 			return turma;
 			
 		}
