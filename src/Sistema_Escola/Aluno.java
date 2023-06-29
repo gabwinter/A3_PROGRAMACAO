@@ -5,13 +5,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import BD.Conexao;
 
 class Aluno extends Usuario_sem_definicao {
+	
+	private List<Turma> turmas;
 
-	public Aluno(String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
+	public Aluno(String nomeCompleto, String cpf, String endereco, String email, String celular, List<Turma> turmas) throws Exception {
 		super(nomeCompleto, cpf, endereco, email, celular);
+		this.turmas = turmas;
+	}
+	
+	public Aluno(int matricula, String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
+		super(nomeCompleto, cpf, endereco, email, celular);
+		this.matricula = matricula;
 	}
 	
 	private int matricula;
@@ -26,6 +36,8 @@ class Aluno extends Usuario_sem_definicao {
 	
 	public void salvarNoBanco(){
 		String sql = "INSERT INTO alunos (nome, cpf, endereco, email, celular) VALUES (?, ?, ?, ?, ?)";
+		
+		
 		Connection conexao = null;
 		PreparedStatement pstm = null;
 		
@@ -43,6 +55,11 @@ class Aluno extends Usuario_sem_definicao {
 			
 			int matricula = obterMatricula(pstm);
 			this.setMatricula(matricula);
+			
+			for(Turma turma : turmas) {
+				Aluno_Turma aluno_turma = new Aluno_Turma(this, turma);
+				aluno_turma.salvarNoBanco();
+			}
 			
 		}catch(Exception error) {
 			System.out.println(error);
@@ -68,5 +85,38 @@ class Aluno extends Usuario_sem_definicao {
 	    }
 	    return matricula;
 				
+	}
+	
+	public static List<Aluno> buscarTodos() throws Exception {
+		try {
+    		Connection con = Conexao.obterConexao();
+			Statement stmt = con.createStatement();
+		
+			List<Aluno> alunos = new ArrayList<>();
+			
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Alunos");
+			
+			while(rs.next()) {
+				int matricula = rs.getInt("matricula");
+				String nome = rs.getString("nome");
+				String cpf = rs.getString("cpf");
+				String endereco = rs.getString("endereco");
+				String email = rs.getString("email");
+				String celular = rs.getString("celular");
+				
+				Aluno aluno = new Aluno(matricula, nome, cpf, endereco, email, celular);
+				alunos.add(aluno);
+			}
+						
+			rs.close();
+			stmt.close();
+			con.close();
+			
+			return alunos;
+			
+    	}catch(SQLException e){
+    		e.printStackTrace();
+    		return null;
+    	}
 	}
 }

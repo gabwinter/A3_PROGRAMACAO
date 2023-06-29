@@ -1,73 +1,62 @@
 package Sistema_Escola;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import BD.Conexao;
-
 import java.util.Scanner;
 
 
 
 public class Principal {
-	public static void main(String[] args) {
-		try {
-			
-			run();
-			
-			
-			
-		} catch(Exception error) {
-			System.out.print("alo");
-			System.out.print(error);
-		}
+	public static void main(String[] args) {		
+		run();		
 	}
 	
 	private static void run() {
-		Scanner leitor = new Scanner(System.in);
-		
-		int resposta = exibeMenuPrincipal(leitor);
-		limpaTela();
-		
-		if(resposta == 1) {
-			Sala sala = exibeMenuCadastroSala(leitor);
-			sala.salvarNoBanco();	
+		try {
+			Scanner leitor = new Scanner(System.in);
+			
+			int resposta = exibeMenuPrincipal(leitor);
 			limpaTela();
+			
+			if(resposta == 1) {
+				Sala sala = exibeMenuCadastroSala(leitor);
+				sala.salvarNoBanco();	
+				limpaTela();
+				run();
+			}
+			if(resposta == 2) {
+				Curso curso = exibeMenuCadastroCurso(leitor);
+				curso.salvarNoBanco();
+				limpaTela();
+				run();
+			}
+			if(resposta == 3) {
+				Professor professor = exibeMenuCadastroProfessor(leitor);
+				professor.salvarNoBanco();	
+				limpaTela();
+				run();
+			}
+			if(resposta == 4) {
+				Turma turma = exibeMenuCadastroTurma(leitor);
+				turma.salvarNoBanco();	
+				limpaTela();
+				run();
+			}
+			if(resposta == 5) {
+				Aluno aluno = exibeMenuCadastroAluno(leitor);
+				aluno.salvarNoBanco();	
+				limpaTela();
+				run();
+			}
+			
+			
+			leitor.close();
+		} catch(Exception error) {
+			System.out.print("\n\nOcorreu um erro: " + error.getMessage() + "\n\n");
 			run();
-		}
-		if(resposta == 2) {
-			Curso curso = exibeMenuCadastroCurso(leitor);
-			curso.salvarNoBanco();
-			limpaTela();
-			run();
-		}
-		if(resposta == 3) {
-			Professor professor = exibeMenuCadastroProfessor(leitor);
-			professor.salvarNoBanco();	
-			limpaTela();
-			run();
-		}
-		if(resposta == 4) {
-			Sala sala = exibeMenuCadastroSala(leitor);
-			sala.salvarNoBanco();	
-			limpaTela();
-			run();
-		}
-		if(resposta == 5) {
-			Sala sala = exibeMenuCadastroSala(leitor);
-			sala.salvarNoBanco();	
-			limpaTela();
-			run();
-		}
-		
-		
-		leitor.close();
-		
+		}	
 	}
+
 	
 	private static int exibeMenuPrincipal(Scanner leitor) {
 		System.out.println("1 - Cadastrar salas");
@@ -79,8 +68,8 @@ public class Principal {
 		
 		
 		System.out.println("\n");
-		System.out.println("Selecione: ");
-		int resposta = leitor.nextInt();
+		System.out.print("Selecione: ");
+		int resposta = Integer.parseInt(leitor.nextLine());
 		
 		if(resposta < 1 || resposta > 5) {
 			limpaTela();
@@ -95,13 +84,17 @@ public class Principal {
 		
 		try {
 			System.out.print("nome: ");
-			String nome = leitor.next();
-			System.out.println("local: ");
-			String local = leitor.next();
-			System.out.println("capacidade total: ");
+			String nome = leitor.nextLine();
+			System.out.print("local: ");
+			String local = leitor.nextLine();
+			System.out.print("capacidade total: ");
 			int capacidadeTotal = leitor.nextInt();
 			
 			Sala sala = new Sala(nome, local, capacidadeTotal);
+			
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			System.out.print("Sala cadastrada com sucesso!");
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 			return sala;
 		}
 		catch(Exception error) {
@@ -115,13 +108,16 @@ public class Principal {
 		
 		try {
 			System.out.print("nome: ");
-			String nome = leitor.next();
-			System.out.println("carga horária: ");
-			int cargaHoraria = leitor.nextInt();
-			System.out.println("descrição: ");
-			String descricao = leitor.next();
+			String nome = leitor.nextLine();
+			System.out.print("carga horária: ");
+			int cargaHoraria = Integer.parseInt(leitor.nextLine());
+			System.out.print("descrição: ");
+			String descricao = leitor.nextLine();
 			
 			Curso curso = new Curso(nome, cargaHoraria, descricao);
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			System.out.print("Curso cadastrado com sucesso!");
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 			return curso;
 		}
 		catch(Exception error) {
@@ -130,34 +126,205 @@ public class Principal {
 		}
 	}
 	
-	private static Professor exibeMenuCadastroProfessor(Scanner leitor) {
+	private static Professor exibeMenuCadastroProfessor(Scanner leitor) throws Exception {
 		System.out.println("Cadastro de Professores\n");
-		
+
 		try {
+			
 			System.out.print("nome: ");
-			String nome = leitor.next();
-			System.out.println("materia: ");
-			String materia = leitor.next();
-			System.out.println("cpf: ");
-			String cpf = leitor.next();
-			System.out.println("endereço: ");
-			String endereco = leitor.next();
-			System.out.println("email: ");
-			String email = leitor.next();
-			System.out.println("celular: ");
-			String celular = leitor.next();
+			String nome = leitor.nextLine();
+			
+			System.out.print("cpf: ");
+			String cpf = leitor.nextLine();
+			
+			System.out.print("endereço: ");
+			String endereco = leitor.nextLine();
+			
+			System.out.print("email: ");
+			String email = leitor.nextLine();
+			
+			System.out.print("celular: ");
+			String celular = leitor.nextLine();		
+			
+			System.out.print("\nSelecione os cursos que o professor \"" + nome + "\" ministra: \n\n");
+			
+			List<Curso> cursos = Curso.buscarTodos();
+			Curso cursoDoProfessor = null;
+			
+			if(cursos.size() == 0) {
+				throw new Exception("Não há cursos cadastrados. Cadastre os cursos antes.");
+			}
+			else {
+				int indice = 1;
+				for (Curso curso : cursos) {
+		            System.out.println(indice + " - " + curso.getNomeCurso());
+		            indice++;
+		        }
+				
+				System.out.print("Resposta: ");
+				String resposta = leitor.nextLine();
+				
+				int indiceDoCurso = (Integer.parseInt(resposta) - 1);
+				cursoDoProfessor = cursos.get(indiceDoCurso);
+			}
 			
 			
-			Professor professor = new Professor(materia, nome, cpf, endereco, email, celular);
+			if(cursoDoProfessor == null) throw new Exception("É necessário selecionar um curso.");
+			
+			Professor professor = new Professor(nome, cpf, endereco, email, celular, cursoDoProfessor);
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			System.out.print("Professor cadastrado com sucesso!");
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 			return professor;
 		}
 		catch(Exception error) {
-			System.out.println("Ocorreu um erro: " + error + "\n\n");
-			return exibeMenuCadastroProfessor(leitor);
+			throw new Exception(error);
 		}
 	}
 	
+	private static Turma exibeMenuCadastroTurma(Scanner leitor) throws Exception {
+		System.out.println("Cadastro de Turmas\n");
+		
+		try {
+			System.out.print("Dia da semana que a turma terá aula: \n\n");
+			System.out.print("1 - Domingo\n");
+			System.out.print("2 - Segunda-feira\n");
+			System.out.print("3 - Terça-feira\n");
+			System.out.print("4 - Quarta-feira\n");
+			System.out.print("5 - Quinta-feira\n");
+			System.out.print("6 - Sexta-feira\n");
+			System.out.print("7 - Sábado\n");
+			String diaDaSemanaResposta = leitor.nextLine();
+			String diaDaSemana = "Segunda";
+			
+			if(diaDaSemanaResposta.equals("1")) diaDaSemana = "Domingo";
+			else if(diaDaSemanaResposta.equals("3")) diaDaSemana = "Terca";
+			else if(diaDaSemanaResposta.equals("4")) diaDaSemana = "Quarta";
+			else if(diaDaSemanaResposta.equals("5")) diaDaSemana = "Quinta";
+			else if(diaDaSemanaResposta.equals("6")) diaDaSemana = "Sexta";
+			else if(diaDaSemanaResposta.equals("7")) diaDaSemana = "Sabado";
+			
+			
+			//Exibe os professores
+			List<Professor> professores = Professor.buscarTodos();
+			Professor professorDaTurma = null;
+			
+			if(professores == null || professores.size() == 0) {
+				throw new Exception("Não há professores cadastrados. Cadastre os professores antes.");
+			}
+			else {
+				System.out.print("\nSelecione o professor responsável pela turma\n");
+				
+				int indice = 1;
+				for (Professor professor : professores) {
+		            System.out.println(indice + " - " + professor.getNomeCompleto());
+		            indice++;
+		        }
+
+				
+				System.out.print("Resposta: ");
+				String resposta = leitor.nextLine();
+				
+				int indiceDoProfessor = (Integer.parseInt(resposta) - 1);
+				professorDaTurma = professores.get(indiceDoProfessor);
+			}
+			
+			//Exibe as salas
+			List<Sala> salas = Sala.buscarTodosSemTurma();
+			Sala salaDaTurma = null;
+			
+			if(salas == null || salas.size() == 0) {
+				throw new Exception("Não há salas cadastradas ou disponíveis. Cadastre novas salas antes.");
+			}
+			else {
+				System.out.print("\nSelecione a sala da turma\n");
+				
+				int indice = 1;
+				for (Sala sala : salas) {
+		            System.out.println(indice + " - " + sala.getNome());
+		            indice++;
+		        }
+
+				
+				System.out.print("Resposta: ");
+				String resposta = leitor.nextLine();
+				
+				int indiceDaSala = (Integer.parseInt(resposta) - 1);
+				salaDaTurma = salas.get(indiceDaSala);
+			}
+			
+			Turma turma = new Turma(professorDaTurma, salaDaTurma, diaDaSemana);
+			return turma;
+			
+		}
+		catch(Exception error) {
+			throw error;
+		}
+	}
+	
+	
+	private static Aluno exibeMenuCadastroAluno(Scanner leitor) throws Exception {
+		System.out.println("Cadastro de Alunos\n");
+
+		try {
+			
+			System.out.print("nome: ");
+			String nome = leitor.nextLine();
+			
+			System.out.print("cpf: ");
+			String cpf = leitor.nextLine();
+			
+			System.out.print("endereço: ");
+			String endereco = leitor.nextLine();
+			
+			System.out.print("email: ");
+			String email = leitor.nextLine();
+			
+			System.out.print("celular: ");
+			String celular = leitor.nextLine();		
+			
+			System.out.print("\nSelecione as turmas que o aluno \"" + nome + "\" faz parte: \n\n");
+			
+			List<Turma> turmas = Turma.buscarTodos();
+			List<Turma> turmasDoAluno = new ArrayList();
+			
+			if(turmas == null || turmas.size() == 0){
+				throw new Exception("Não há turmas cadastradas. Cadastre as turmas antes.");
+			}
+			else {
+				System.out.print("\n   dia da semana | professor | sala\n");
+				System.out.print("--------------------------------------\n\n");
+				int indice = 1;
+				for (Turma turma : turmas) {
+		            System.out.println(indice + " - " + turma.getDiaSemana() + " | " + turma.getProfessor().getNomeCompleto() + " | " + turma.getSala().getNome());
+		            indice++;
+		        }
+				
+				System.out.print("\nPara selecionar mais de 1 turma digite da seguinte forma: 1 3 4 5\n");
+				System.out.print("Resposta: ");
+				String[] respostaTurmas = leitor.nextLine().split(" ");
+				
+				for(int i = 0; i < respostaTurmas.length; i++) {
+					int indiceDaTurma = (Integer.parseInt(respostaTurmas[i]) - 1);
+					Turma turmaSelecionada = turmas.get(indiceDaTurma);
+					turmasDoAluno.add(turmaSelecionada);
+				}
+			}
+			
+			
+			if(turmasDoAluno.size() == 0) throw new Exception("É necessário selecionar pelo menos 1 turma.");
+			
+			Aluno aluno = new Aluno(nome, cpf, endereco, email, celular, turmasDoAluno);
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			System.out.print("Aluno cadastrado com sucesso!");
+			System.out.print("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+			return aluno;
+		}
+		catch(Exception error) {
+			throw new Exception(error);
+		}
+	}
 	private static void limpaTela() {
-	    System.out.println("\n=-=-=-=-=-=-=-=-=-=-=-=\n\n");
+	    System.out.println("\n\n");
 	}
 }

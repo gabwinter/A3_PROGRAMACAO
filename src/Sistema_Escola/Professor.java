@@ -5,45 +5,50 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import BD.Conexao;
 
 public class Professor extends Usuario_sem_definicao {
 	private int codigo;
-	private String materia;
-	private List<Curso> cursos;
+	private Curso curso;
 	
-	public Professor(String materia, String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
+	public Professor(String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
 		super(nomeCompleto, cpf, endereco, email, celular);
-		this.materia = materia;
 	}
 	
-	public Professor(String materia, String nomeCompleto, String cpf, String endereco, String email, String celular, List<Curso> cursos) throws Exception {
+	public Professor(String nomeCompleto, String cpf, String endereco, String email, String celular, Curso curso) throws Exception {
 		super(nomeCompleto, cpf, endereco, email, celular);
-		this.materia = materia;
-		this.cursos = cursos;
+		this.curso = curso;
 	}
 	
-	public float getCodigo() {
+	public Professor(int codigo, String nomeCompleto, String cpf, String endereco, String email, String celular, Curso curso) throws Exception {
+		super(nomeCompleto, cpf, endereco, email, celular);
+		this.curso = curso;
+		this.codigo = codigo;
+	}
+	
+	public Professor(int codigo, String nomeCompleto, String cpf, String endereco, String email, String celular) throws Exception {
+		super(nomeCompleto, cpf, endereco, email, celular);
+		this.codigo = codigo;
+	}
+	
+	public int getCodigo() {
 		return codigo;
 	}
 	
-	public String getMateria() {
-		return materia;
+	public Curso getCurso() {
+		return curso;
 	}
 	
 	private void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 	
-	private void addCurso(Curso curso) {
-		this.cursos.add(curso);
-	}
 	
 	public void salvarNoBanco(){
-		String sql = "INSERT INTO professores (nome, cpf, endereco, email, celular) VALUES (?, ?, ?, ?, ?)";
-		String sql2 = "INSERT INTO professores (nome, cpf, endereco, email, celular) VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO professores (nome, cpf, endereco, email, celular, curso_id) VALUES (?, ?, ?, ?, ?, ?)";
 		Connection conexao = null;
 		PreparedStatement pstm = null;
 		
@@ -56,6 +61,12 @@ public class Professor extends Usuario_sem_definicao {
 			pstm.setString(3, getEndereco());
 			pstm.setString(4, getEmail());
 			pstm.setString(5, getCelular());
+			
+			if(getCurso() != null) {
+				pstm.setInt(6, getCurso().getId());
+			}else {
+				pstm.setString(6, null);
+			}
 			
 			pstm.execute();
 			
@@ -83,5 +94,38 @@ public class Professor extends Usuario_sem_definicao {
 	        codigo = rs.getInt(1);
 	    }
 	    return codigo;
+	}
+	
+	public static List<Professor> buscarTodos() throws Exception {
+		try {
+    		Connection con = Conexao.obterConexao();
+			Statement stmt = con.createStatement();
+		
+			List<Professor> professores = new ArrayList<>();
+			
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Professores");
+			
+			while(rs.next()) {
+				int codigo = rs.getInt("id");
+				String nome = rs.getString("nome");
+				String cpf = rs.getString("cpf");
+				String endereco = rs.getString("endereco");
+				String email = rs.getString("email");
+				String celular = rs.getString("celular");
+				
+				Professor professor = new Professor(codigo, nome, cpf, endereco, email, celular);
+				professores.add(professor);
+			}
+						
+			rs.close();
+			stmt.close();
+			con.close();
+			
+			return professores;
+			
+    	}catch(SQLException e){
+    		e.printStackTrace();
+    		return null;
+    	}
 	}
 }
