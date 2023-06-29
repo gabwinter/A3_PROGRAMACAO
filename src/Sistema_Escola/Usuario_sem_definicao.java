@@ -75,6 +75,7 @@ public class Usuario_sem_definicao {
 	    		throw new Exception("Email deve ter 3 caracteres ou mais.");
 	    	}
 	    	if(!email.contains("@")) {
+	    		System.out.println(email);
 	    		throw new Exception("Email inválido.");
 	    	}
 	    }
